@@ -1,5 +1,6 @@
 # Análisis de los útimos 10 años del Clima en Chile con Dashboard
 
+
 <p align="left">
   <img src="https://img.shields.io/badge/Proyecto_Completado-%E2%9C%94-2ECC71?style=flat-square&logo=checkmarx&logoColor=white" alt="Proyecto Completado"/>
   <img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
@@ -9,7 +10,7 @@
   <img src="https://img.shields.io/badge/Render-Cloud_Hosting-46E3B7?style=flat-square&logo=render&logoColor=white" alt="Render"/>
 </p>
 
-Un análisis de 10 años de datos meteorológicos de las 16 capitales regionales de Chile, desde la extracción de datos vía API hasta un dashboard interactivo desplegado en la nube.
+Análisis de 10 años de datos meteorológicos de las 16 capitales regionales de Chile, desde la extracción de datos vía API hasta un dashboard interactivo.
 
 ### [Notebook](https://github.com/Ricardouchub/Proyecto-clima-Chile-API-dashboard/blob/main/Notebook.ipynb)
 
@@ -103,4 +104,4 @@ El análisis reveló insights clave sobre el clima de Chile:
 ## **6. Autor**
 **Ricardo Urdaneta**
 
-<img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" /> <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" />
+[**LinkedIn**](https://www.linkedin.com/in/ricardourdanetacastro/)
