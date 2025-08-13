@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 from datetime import datetime, timedelta
 import time
+import os
 
 # 1. LISTA DE CAPITALES REGIONALES DE CHILE
 ciudades = {
@@ -94,9 +95,11 @@ if datos_totales:
     df_final = df_final.dropna(subset=['fecha'])
     df_final['fecha'] = pd.to_datetime(df_final['fecha'])
     df_final = df_final[['ciudad', 'fecha', 'temp_max_c', 'temp_min_c', 'precipitacion_mm', 'viento_max_kmh']]
-    
+    output_folder = 'data'
     nombre_archivo = 'datos_climaticos_chile_10_anios.csv'
-    df_final.to_csv(nombre_archivo, index=False, date_format='%Y-%m-%d')
+    file_path = os.path.join(output_folder, nombre_archivo)
+
+    df_final.to_csv(file_path, index=False, date_format='%Y-%m-%d')
 
     print("\n¡Extracción completada!")
     print(f"Se han guardado {len(df_final)} registros en el archivo '{nombre_archivo}'")
