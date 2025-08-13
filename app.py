@@ -1,9 +1,4 @@
-# dash_app_moderno.py
-# Versión final y refinada del Dashboard Climático de Chile
-# - Diseño responsive con barra lateral más angosta
-# - Estilos CSS personalizados para controles
-# - Panel de instrucciones y título actualizado
-# - Selector de fecha mejorado
+# app.py por Ricardo Urdaneta
 
 import dash
 from dash import dcc, html, Input, Output, State
