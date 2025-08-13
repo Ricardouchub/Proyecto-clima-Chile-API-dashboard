@@ -1,5 +1,13 @@
 # Análisis de los útimos 10 años del Clima en Chile con Dashboard
 
+<p align="left">
+  <img src="https://img.shields.io/badge/Proyecto_Completado-%E2%9C%94-2ECC71?style=flat-square&logo=checkmarx&logoColor=white" alt="Proyecto Completado"/>
+  <img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/Open_Meteo-API_Clima-FF6C37?style=flat-square&logo=openweathermap&logoColor=white" alt="OpenWeatherMap"/>
+  <img src="https://img.shields.io/badge/Plotly-Visualización_Interactiva-3F4F75?style=flat-square&logo=plotly&logoColor=white" alt="Plotly"/>
+    <img src="https://img.shields.io/badge/Gunicorn-Servidor_Web-499848?style=flat-square&logo=gunicorn&logoColor=white" alt="Gunicorn"/>
+  <img src="https://img.shields.io/badge/Render-Cloud_Hosting-46E3B7?style=flat-square&logo=render&logoColor=white" alt="Render"/>
+</p>
 
 Un análisis de 10 años de datos meteorológicos de las 16 capitales regionales de Chile, desde la extracción de datos vía API hasta un dashboard interactivo desplegado en la nube.
 
@@ -30,7 +38,7 @@ El objetivo de este proyecto es realizar un ciclo completo de vida de datos, tra
 * Aplicado: Construir y desplegar una aplicación web que permita a los usuarios explorar dinámicamente los datos de temperatura, precipitación y viento, facilitando la comprensión del comportamiento climático del país.
 
 ## **2. Fuente de Datos**
-El proyecto utiliza la API pública y gratuita de **Open-Meteo**, que proporciona datos meteorológicos históricos y de pronóstico de alta calidad. Se consultó el endpoint de Archivo Histórico para obtener las siguientes variables diarias para cada una de las 16 capitales regionales de Chile desde 2015 hasta 2025:
+Se creó un script `extractor_clima_script.py` para extraer los datos de una API pública y gratuita de **Open-Meteo**, que proporciona datos meteorológicos históricos y de pronóstico de alta calidad. Se consultó el endpoint de Archivo Histórico para obtener las siguientes variables diarias para cada una de las 16 capitales regionales de Chile desde 2015 hasta 2025:
 
 * Temperatura máxima `temperature_2m_max`
 
