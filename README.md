@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/Render-Cloud_Hosting-46E3B7?style=flat-square&logo=render&logoColor=white" alt="Render"/>
 </p>
 
-Análisis de 10 años de datos meteorológicos de las 16 capitales regionales de Chile, desde la extracción de datos vía API hasta un dashboard interactivo.
+Análisis de los últimos 10 años de datos meteorológicos de las 16 capitales regionales de Chile, desde la extracción de datos vía API hasta un dashboard interactivo.
 
 ### [Notebook](https://github.com/Ricardouchub/Proyecto-clima-Chile-API-dashboard/blob/main/Notebook.ipynb)
 
