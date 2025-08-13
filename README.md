@@ -1,4 +1,4 @@
-# Proyecto clima Chile API
+# Análisis de los útimos 10 años del Clima en Chile con Dashboard
 
 
 Un análisis de 10 años de datos meteorológicos de las 16 capitales regionales de Chile, desde la extracción de datos vía API hasta un dashboard interactivo desplegado en la nube.
