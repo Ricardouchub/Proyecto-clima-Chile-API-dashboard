@@ -31,7 +31,7 @@ Un análisis de 10 años de datos meteorológicos de las 16 capitales regionales
 ---
 
 ## **1. Descripción del Proyecto**
-El objetivo de este proyecto es realizar un ciclo completo de vida de datos, transformando información meteorológica cruda en una herramienta de visualización interactiva y accesible. El análisis se enfoca en dos áreas principales:
+El objetivo de este proyecto es realizar un ciclo completo de vida de datos, transformando información meteorológica cruda en una herramienta de visualización interactiva y accesible. El análisis se enfoca en dos áreas:
 
 * Exploratorio: Investigar y comparar las características climáticas de las capitales de Chile para entender patrones, tendencias y eventos extremos a lo largo de la última década.
 
