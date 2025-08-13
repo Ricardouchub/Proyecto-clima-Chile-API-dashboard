@@ -18,7 +18,7 @@ import calendar
 # --------------------
 # 1) CARGA DE DATOS
 # --------------------
-DF_PATH = 'datos_climaticos_chile_10_anios.csv'
+DF_PATH = 'data/datos_climaticos_chile_10_anios.csv'
 
 try:
     df = pd.read_csv(DF_PATH)
