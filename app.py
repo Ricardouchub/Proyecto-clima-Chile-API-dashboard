@@ -45,11 +45,15 @@ df = pd.merge(df, df_coords[['ciudad', 'lat', 'lon']], on='ciudad', how='left')
 
 # Controles
 ciudades_disponibles = sorted(df['ciudad'].unique())
+
+# --- ¡CAMBIO AQUÍ! Se añade la nueva métrica ---
 metricas_disponibles = {
     'temp_max_c': 'Temperatura Máxima (°C)',
+    'temp_min_c': 'Temperatura Mínima (°C)', # <-- NUEVA LÍNEA
     'precipitacion_mm': 'Precipitación (mm)',
     'viento_max_kmh': 'Velocidad del Viento (km/h)'
 }
+
 available_years = sorted(df['año'].unique())
 month_options = [
     {'label': 'Enero', 'value': 1}, {'label': 'Febrero', 'value': 2},
@@ -100,7 +104,6 @@ sidebar = html.Div([
     dbc.RadioItems(id='selector-metrica', options=[{'label': v, 'value': k} for k, v in metricas_disponibles.items()], value='temp_max_c', inline=False),
     html.Br(),
 
-    # --- ¡NUEVO! Selector de fecha mejorado ---
     html.Label('Rango de Fechas', className='text-light small mb-2'),
     dbc.Card(
         dbc.CardBody([
@@ -177,7 +180,6 @@ def filtrar_dataframe(ciudades, start_date, end_date):
 @app.callback(
     Output('df-filtrado', 'data'),
     [Input('btn-actualizar', 'n_clicks')],
-    # --- ¡NUEVO! Se usan los nuevos selectores de fecha como State ---
     [State('selector-ciudad', 'value'),
      State('selector-año-inicio', 'value'),
      State('selector-mes-inicio', 'value'),
@@ -185,11 +187,9 @@ def filtrar_dataframe(ciudades, start_date, end_date):
      State('selector-mes-fin', 'value')]
 )
 def actualizar_store(n_clicks, ciudades, año_inicio, mes_inicio, año_fin, mes_fin):
-    # Maneja el caso donde los selectores no tienen valor inicial
     if not all([año_inicio, mes_inicio, año_fin, mes_fin]):
         return pd.DataFrame().to_json(date_format='iso', orient='records')
 
-    # Construye las fechas de inicio y fin
     start_date = f"{año_inicio}-{mes_inicio:02d}-01"
     _, last_day = calendar.monthrange(año_fin, mes_fin)
     end_date = f"{año_fin}-{mes_fin:02d}-{last_day}"
