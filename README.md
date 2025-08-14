@@ -1,4 +1,4 @@
-# Análisis de los útimos 10 años del Clima en Chile con Dashboard
+# Análisis del clima de los útimos 10 años en Chile con Dashboard
 
 
 <p align="left">
@@ -12,9 +12,7 @@
 
 Análisis de los últimos 10 años de datos meteorológicos de las 16 capitales regionales de Chile, desde la extracción de datos vía API hasta un dashboard interactivo.
 
-### [Notebook](https://github.com/Ricardouchub/Proyecto-clima-Chile-API-dashboard/blob/main/Notebook.ipynb)
-
-### [Dashboard](https://proyecto-clima-chile-api-dashboard.onrender.com)
+### | [Notebook](https://github.com/Ricardouchub/Proyecto-clima-Chile-API-dashboard/blob/main/Notebook.ipynb) | [Dashboard](https://proyecto-clima-chile-api-dashboard.onrender.com) |
 
 <img width="749" height="379" alt="image" src="https://github.com/user-attachments/assets/17512aa5-2169-42b6-bb71-68b84d198148" />
 
