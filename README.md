@@ -1,4 +1,4 @@
-# Análisis de los útimos 10 años del Clima en Chile con Dashboard
+# Análisis del clima de los útimos 10 años en Chile con Dashboard
 
 
 <p align="left">
