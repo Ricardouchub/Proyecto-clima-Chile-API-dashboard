@@ -70,7 +70,7 @@ Se construyó una aplicación web con Dash y Plotly Express. El dashboard fue di
 
     Tarjetas de KPIs que resumen los datos seleccionados.
 
-Gráficos interactivos, incluyendo series de tiempo, mapas, análisis de anomalías y boxplots.
+    Gráficos interactivos, incluyendo series de tiempo, mapas, análisis de anomalías y boxplots.
 
 * **Fase 4: Despliegue del dashboard**
 La aplicación final fue preparada para producción utilizando un servidor web Gunicorn. Se configuraron los archivos Procfile y requirements.txt, y el proyecto fue subido a un repositorio de GitHub. Finalmente, se desplegó en la plataforma Render, haciendo el dashboard accesible públicamente.
