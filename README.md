@@ -25,7 +25,8 @@ Análisis de los últimos 10 años de datos meteorológicos de las 16 capitales 
 3. [Fases del PRoyecto](#3-fases-del-proyecto)
 4. [Conclusiones](#4-conclusiones)
 5. [Herramientas](#5-herramientas)
-6. [Autor](#6-autor)
+6. [Visualizaciones Destacadas](#6-visualizaciones-destacadas)
+7. [Autor](#7-autor)
 
 ---
 
@@ -99,7 +100,11 @@ El análisis reveló insights clave sobre el clima de Chile:
 
 `Render` para el hosting en la nube.
 
-## **6. Autor**
+## **6. Visualizaciones Destacadas**
+
+<img width="708" height="521" alt="image" src="https://github.com/user-attachments/assets/9dcf1327-76ea-43e9-87ef-59b66f8fb8ac" />
+
+## **7. Autor**
 **Ricardo Urdaneta**
 
 [**LinkedIn**](https://www.linkedin.com/in/ricardourdanetacastro/)
