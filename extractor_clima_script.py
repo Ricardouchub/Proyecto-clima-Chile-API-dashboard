@@ -1,8 +1,9 @@
 import requests
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 import time
 import os
+import calendar
 
 # LISTA DE CAPITALES REGIONALES DE CHILE
 ciudades = {
@@ -16,66 +17,131 @@ ciudades = {
     "Coyhaique": (-45.57, -72.07), "Punta Arenas": (-53.16, -70.92)
 }
 
+
+def iter_meses(inicio_anio, inicio_mes, fin_anio, fin_mes):
+    anio = inicio_anio
+    mes = inicio_mes
+    while (anio < fin_anio) or (anio == fin_anio and mes <= fin_mes):
+        yield anio, mes
+        if mes == 12:
+            anio += 1
+            mes = 1
+        else:
+            mes += 1
+
+
+def agrupar_rangos_meses(meses_faltantes):
+    if not meses_faltantes:
+        return []
+    meses_ordenados = sorted(meses_faltantes)
+    rangos = []
+    inicio_anio, inicio_mes = meses_ordenados[0]
+    prev_anio, prev_mes = inicio_anio, inicio_mes
+    for anio, mes in meses_ordenados[1:]:
+        prev_key = prev_anio * 12 + prev_mes
+        curr_key = anio * 12 + mes
+        if curr_key == prev_key + 1:
+            prev_anio, prev_mes = anio, mes
+            continue
+        rangos.append((inicio_anio, inicio_mes, prev_anio, prev_mes))
+        inicio_anio, inicio_mes = anio, mes
+        prev_anio, prev_mes = anio, mes
+    rangos.append((inicio_anio, inicio_mes, prev_anio, prev_mes))
+    return rangos
+
+
 # DEFINIR EL PERIODO DE TIEMPO
 hoy = datetime.now()
-año_actual = hoy.year
-# El rango va desde hace 10 años hasta el año actual inclusive.
-años_a_extraer = range(año_actual - 10, año_actual + 1)
+anio_actual = hoy.year
+anio_inicio = anio_actual - 10
+if hoy.month == 1:
+    anio_fin = anio_actual - 1
+    mes_fin = 12
+else:
+    anio_fin = anio_actual
+    mes_fin = hoy.month - 1
+
+meses_objetivo = list(iter_meses(anio_inicio, 1, anio_fin, mes_fin))
+sin_meses_objetivo = not meses_objetivo
+
+output_folder = 'data'
+nombre_archivo = 'datos_climaticos_chile_10_anios.csv'
+file_path = os.path.join(output_folder, nombre_archivo)
+
+df_existente = None
+if os.path.exists(file_path):
+    try:
+        df_existente = pd.read_csv(file_path)
+        if 'fecha' in df_existente.columns:
+            df_existente['fecha'] = pd.to_datetime(df_existente['fecha'], errors='coerce')
+        else:
+            print("Archivo existente sin columna 'fecha'. Se ignorara para faltantes.")
+            df_existente = None
+        if df_existente is not None and 'ciudad' not in df_existente.columns:
+            print("Archivo existente sin columna 'ciudad'. Se ignorara para faltantes.")
+            df_existente = None
+    except Exception as e:
+        print(f"No se pudo leer el archivo existente: {e}")
+        df_existente = None
 
 datos_totales = []
-print("Iniciando la extracción de datos climáticos (versión final)...")
+total_meses_faltantes = 0
+print("Iniciando la extraccion de datos climaticos (append)...")
 
-# BUCLE PRINCIPAL POR CIUDAD
-for ciudad, (lat, lon) in ciudades.items():
-    print(f"\nProcesando {ciudad}...")
-    datos_ciudad = []
+if not sin_meses_objetivo:
+    # BUCLE PRINCIPAL POR CIUDAD
+    for ciudad, (lat, lon) in ciudades.items():
+        print(f"\nProcesando {ciudad}...")
+        datos_ciudad = []
 
-    # BUCLE INTERNO POR AÑO
-    for año in años_a_extraer:
-        start_date = f"{año}-01-01"
+        meses_existentes = set()
+        if df_existente is not None:
+            df_ciudad_existente = df_existente[df_existente['ciudad'] == ciudad].dropna(
+                subset=['fecha']
+            )
+            meses_existentes = set(
+                zip(df_ciudad_existente['fecha'].dt.year, df_ciudad_existente['fecha'].dt.month)
+            )
 
-        if año == año_actual:
-            # Calculamos el primer día del mes actual
-            primer_dia_mes_actual = hoy.replace(day=1)
-            # Restamos un día para obtener el último día del mes anterior
-            end_date_dt = primer_dia_mes_actual - timedelta(days=1)
-            # Formateamos la fecha a string
-            end_date = end_date_dt.strftime("%Y-%m-%d")
-            # Si el mes es Enero, no hay datos que extraer para el año en curso aun.
-            if hoy.month == 1:
-                print(f"  - Saltando año {año} (aún no hay meses completos).")
-                continue
-        else:
-            # Para años pasados, tomamos el año completo.
-            end_date = f"{año}-12-31"
-            
-        print(f"  - Extrayendo: {start_date} a {end_date}...")
+        meses_faltantes = [m for m in meses_objetivo if m not in meses_existentes]
+        total_meses_faltantes += len(meses_faltantes)
 
-        url = (
-            f"https://archive-api.open-meteo.com/v1/archive?"
-            f"latitude={lat}&longitude={lon}&"
-            f"start_date={start_date}&end_date={end_date}&"
-            "daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&"
-            "timezone=auto"
-        )
+        if not meses_faltantes:
+            print("  - No hay meses faltantes. Saltando.")
+            continue
 
-        try:
-            response = requests.get(url, timeout=60)
-            response.raise_for_status()
-            datos_api = response.json()
-            if 'daily' in datos_api:
-                df_año = pd.DataFrame(datos_api['daily'])
-                datos_ciudad.append(df_año)
-            else:
-                 print(f"    -> No se encontraron datos 'daily' para el período.")
-            time.sleep(0.5)
-        except requests.exceptions.RequestException as e:
-            print(f"    -> Error al extraer el período: {e}")
+        rangos = agrupar_rangos_meses(meses_faltantes)
+        for inicio_anio, inicio_mes, fin_anio, fin_mes in rangos:
+            start_date = f"{inicio_anio:04d}-{inicio_mes:02d}-01"
+            ultimo_dia = calendar.monthrange(fin_anio, fin_mes)[1]
+            end_date = f"{fin_anio:04d}-{fin_mes:02d}-{ultimo_dia:02d}"
+            print(f"  - Extrayendo: {start_date} a {end_date}...")
 
-    if datos_ciudad:
-        df_ciudad_completo = pd.concat(datos_ciudad, ignore_index=True)
-        df_ciudad_completo['ciudad'] = ciudad
-        datos_totales.append(df_ciudad_completo)
+            url = (
+                f"https://archive-api.open-meteo.com/v1/archive?"
+                f"latitude={lat}&longitude={lon}&"
+                f"start_date={start_date}&end_date={end_date}&"
+                "daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&"
+                "timezone=auto"
+            )
+
+            try:
+                response = requests.get(url, timeout=60)
+                response.raise_for_status()
+                datos_api = response.json()
+                if 'daily' in datos_api:
+                    df_rango = pd.DataFrame(datos_api['daily'])
+                    datos_ciudad.append(df_rango)
+                else:
+                    print("    -> No se encontraron datos 'daily' para el periodo.")
+                time.sleep(0.5)
+            except requests.exceptions.RequestException as e:
+                print(f"    -> Error al extraer el periodo: {e}")
+
+        if datos_ciudad:
+            df_ciudad_completo = pd.concat(datos_ciudad, ignore_index=True)
+            df_ciudad_completo['ciudad'] = ciudad
+            datos_totales.append(df_ciudad_completo)
 
 # COMBINAR, LIMPIAR Y GUARDAR
 if datos_totales:
@@ -88,19 +154,29 @@ if datos_totales:
         'precipitation_sum': 'precipitacion_mm',
         'wind_speed_10m_max': 'viento_max_kmh'
     }, inplace=True)
-    
+
     df_final = df_final.dropna(subset=['fecha'])
     df_final['fecha'] = pd.to_datetime(df_final['fecha'])
     df_final = df_final[['ciudad', 'fecha', 'temp_max_c', 'temp_min_c', 'precipitacion_mm', 'viento_max_kmh']]
-    output_folder = 'data'
-    nombre_archivo = 'datos_climaticos_chile_10_anios.csv'
-    file_path = os.path.join(output_folder, nombre_archivo)
 
-    df_final.to_csv(file_path, index=False, date_format='%Y-%m-%d')
+    os.makedirs(output_folder, exist_ok=True)
+    escribir_header = not os.path.exists(file_path) or os.path.getsize(file_path) == 0
+    df_final.to_csv(
+        file_path,
+        mode='a',
+        header=escribir_header,
+        index=False,
+        date_format='%Y-%m-%d'
+    )
 
-    print("\n¡Extracción completada!")
-    print(f"Se han guardado {len(df_final)} registros en el archivo '{nombre_archivo}'")
-    print("\nVista previa de los datos (últimos registros):")
+    print("\nExtraccion completada!")
+    print(f"Se agregaron {len(df_final)} registros al archivo '{nombre_archivo}'")
+    print("\nVista previa de los datos agregados (ultimos registros):")
     print(df_final.tail())
 else:
-    print("\nNo se pudieron extraer datos. El archivo final no fue creado.")
+    if sin_meses_objetivo:
+        print("\nNo hay meses completos para extraer todavia.")
+    elif total_meses_faltantes == 0:
+        print("\nNo hay meses faltantes. No se agregaron datos.")
+    else:
+        print("\nNo se pudieron extraer datos. El archivo final no fue actualizado.")
